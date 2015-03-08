@@ -29,6 +29,7 @@ package ch.idsia.scenarios;
 
 import ch.idsia.benchmark.tasks.BasicTask;
 import ch.idsia.tools.MarioAIOptions;
+import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.agents.*;
 import ch.idsia.agents.controllers.*;
 
@@ -44,24 +45,24 @@ public static void main(String[] args)
 //        final String argsString = "-vis on";
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
 //        final Environment environment = new MarioEnvironment();
-		  final Agent agent = new ForwardAgent();
-		  marioAIOptions.setAgent(agent);
+		  //final Agent agent = new ForwardAgent();
+		  //marioAIOptions.setAgent(agent);
 //        final Agent agent = marioAIOptions.getAgent();
           //final Agent a = AgentsPool.getAgentByName("ch.idsia.controllers.agents.controllers.ForwardJumpingAgent");
           final BasicTask basicTask = new BasicTask(marioAIOptions);
-//        for (int i = 0; i < 10; ++i)
-//        {
-//            int seed = 0;
-//            do
-//            {
-//                marioAIOptions.setLevelDifficulty(i);
-//                marioAIOptions.setLevelRandSeed(seed++);
-    basicTask.setOptionsAndReset(marioAIOptions);
-//    basicTask.runSingleEpisode(1);
-    basicTask.doEpisodes(1,true,1);
-//    System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
-//            } while (basicTask.getEnvironment().getEvaluationInfo().marioStatus != Environment.MARIO_STATUS_WIN);
-//        }
+          for (int i = 0; i < 10; ++i)
+          {
+              int seed = 0;
+              //do
+              //{
+                marioAIOptions.setLevelDifficulty(i);
+                marioAIOptions.setLevelRandSeed(seed++);
+            	basicTask.setOptionsAndReset(marioAIOptions);
+                basicTask.runSingleEpisode(1);
+            	//basicTask.doEpisodes(1,true,1);
+//    			System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
+              //} while (basicTask.getEnvironment().getEvaluationInfo().marioStatus != Environment.MARIO_STATUS_WIN);
+          }
 //
     System.exit(0);
 }
