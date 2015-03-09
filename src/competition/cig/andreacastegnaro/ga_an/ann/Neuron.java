@@ -26,6 +26,23 @@ public class Neuron {
 		this.numInputLinks = 0;
 	}
 	
+	public Neuron(float input[])
+	{
+		this.numInputLinks = input.length;
+		connectionLinks = new Connection[numInputLinks];
+		for(int i = 0; i < numInputLinks; i++)
+		{
+			//TODO provide this kind of constructor in Connection
+			connectionLinks[i] = new Connection[input[i]]);
+		}
+		this.outputValue = 0;
+	}
+	
+	public Neuron(Connection connectionlinks[])
+	{
+		this.connectionLinks = connectionlinks;
+	}
+	
 	/**
 	 * Functions
 	 */
@@ -34,7 +51,20 @@ public class Neuron {
     	this.outputValue = outputValue;
     }
     
-	/**
+    public void Activate()
+    {
+    	outputValue = Sigmoid(EvaluateSum());
+    }
+    
+    private float EvaluateSum()
+    {
+    	float sum = 0;
+    	for(Connection conn : connectionLinks)
+    		//TODO add the input value (coming from prev layer and the weight
+    		sum += conn.getInputValue() * conn.getWeight();
+    	return sum;
+    }
+    /**
 	 * Activation function (can decide between several one but this is the common one)
 	 */
 	private float Sigmoid(float value)
