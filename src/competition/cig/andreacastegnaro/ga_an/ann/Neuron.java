@@ -12,10 +12,9 @@ public class Neuron {
 	/**
 	 * Member variables
 	 */	
-	private int numInputLinks;
-	private float outputValue; //must be [0,1]
+	private int numInputLinks;	
 	private Connection connectionLinks[];
-	
+	private float outputValue; //must be [0,1]
 	/**
 	 * Constructors
 	 */
@@ -71,4 +70,11 @@ public class Neuron {
 	{
 		return 1 / (1 + (float)Math.exp(-value));
 	}
+	/**
+	 * Functions to be used from external
+	 */
+	public GetNumeberInputConnections(){return numInputLinks;}
+	public Connection[] GetConnections() {return connectionLinks;}
+	public float GetOutputValue(){return outputValue;}
+	
 }
