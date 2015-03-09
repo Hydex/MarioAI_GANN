@@ -2,6 +2,7 @@ package competition.cig.andreacastegnaro.ga_an.ann;
 
 //For neural network initialization
 import java.security.InvalidParameterException;
+import java.util.*;
 
 public class NeuralNetwork
 {
@@ -55,6 +56,71 @@ public class NeuralNetwork
 
 		
 	}
+	/**
+	 * Functions
+	 */
+	/**
+	 * This function is meant to be used for the genetic algorithm implementation. 
+	 * It represents in that key lecture a gene
+	 * @return all weights from this topology
+	 */
+	public float[] GetTotalWeights()
+	{
+		int weightsCount = GetNumberTotalWeights();
+		float weigths[] = new float[weightsCount];
+		
+		int cuonter  = 0;
+		
+		for (NeuronLayer layer : layers)
+		{
+			for (Neuron neuron : layer.GetNeurons())
+			{
+				for(Connection link : neuron.GetConnections())
+				{
+					weigths[cuonter] = link.getWeight();
+					cuonter++;
+				}
+			}
+		}
+		
+		return weigths;
+		
+	}
+	
+	private int GetNumberTotalWeights()
+	{
+		int nofweigths = 0;
+		
+		for(int i = 0; i < neuronsEachLayer.length - 1; i++)
+		{
+			//dato n output e m input al livello successivo il numero di pesi e' n * m 
+			nofweigths += neuronsEachLayer[i+1] * neuronsEachLayer[i];
+		}
+		return nofweigths;
+	}
+	/**
+	 * Compute the output of the net
+	 */
+	public void ComputeNet()
+	{
+		float tempouts[] = null;
+		//We need to go from the the first hidden layer!
+		for (int i = 1; i < layers.length; i++)
+		{
+			tempouts = new float[neuronsEachLayer[i]];
+			tempouts = layers[i-1].GetOutputs();
+			//Get output from previous layer and setting as inputs of the current one
+			layers[i].SetLayerInput(tempouts);
+			layers[i].CalculateLayerOutput();
+			
+			//The last layer is the net output
+			if(i == layers.length - 1)
+			{
+				outputs = layers[i].GetOutputs();
+			}
+		}
+	}
+	
 	/**
 	 * Providing an entry point for debugging
 	 * @param args
