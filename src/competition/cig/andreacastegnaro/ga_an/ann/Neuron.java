@@ -25,13 +25,23 @@ public class Neuron {
 		this.outputValue = 0.0f;
 	}
 	
+	public Neuron(int connectionsCount)
+	{
+		this.numInputLinks = connectionsCount;
+		this.connectionLinks = new Connection[connectionsCount];
+		for(int i = 0; i<numInputLinks; ++i)
+		{
+			connectionLinks[i] = new Connection();
+		}
+		this.outputValue = 0.0f;
+	}
+	
 	public Neuron(float input[])
 	{
 		this.numInputLinks = input.length;
 		connectionLinks = new Connection[numInputLinks];
 		for(int i = 0; i < numInputLinks; i++)
 		{
-			//TODO provide this kind of constructor in Connection
 			connectionLinks[i] = new Connection(input[i]);
 		}
 		this.outputValue = 0.0f;
@@ -45,6 +55,17 @@ public class Neuron {
 	/**
 	 * Functions
 	 */
+	public void SetInputValues(float input[]) throws Exception
+	{
+		if(input.length == connectionLinks.length)
+		{
+			for(int i = 0; i < connectionLinks.length; i++)
+			{
+				connectionLinks[i].setInputValue(input[i]);
+			}
+		}
+		else throw new Exception("Number of connections does not match");
+	}
     public void SetOutputValue(float outputValue)
     {
     	this.outputValue = outputValue;
@@ -59,7 +80,6 @@ public class Neuron {
     {
     	float sum = 0.0f;
     	for(Connection conn : connectionLinks)
-    		//TODO add the input value (coming from prev layer and the weight
     		sum += conn.getInputValue() * conn.getWeight();
     	return sum;
     }
