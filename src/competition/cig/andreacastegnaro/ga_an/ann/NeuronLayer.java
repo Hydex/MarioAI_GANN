@@ -35,7 +35,7 @@ public class NeuronLayer
     }
     
 	/**
-	 * This is needed for input layer
+	 * This is needed for input layer, because it has not to set input links from other neurons
 	 * @param numNeurons
 	 */
     public NeuronLayer(int numNeurons)
