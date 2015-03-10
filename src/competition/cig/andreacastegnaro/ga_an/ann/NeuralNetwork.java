@@ -2,7 +2,6 @@ package competition.cig.andreacastegnaro.ga_an.ann;
 
 //For neural network initialization
 import java.security.InvalidParameterException;
-import java.util.*;
 
 public class NeuralNetwork
 {
