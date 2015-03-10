@@ -19,6 +19,8 @@ public class NeuralNetwork
 	//Used to train the net and fast debugging
 	protected float errors[];
 	protected float expectedOutputs[][];
+	
+	protected float learningRate;
 
 	/**
 	 * Constructors
@@ -51,9 +53,13 @@ public class NeuralNetwork
 			{
 				layers[i] = new NeuronLayer(neuronsEachLayer[i],neuronsEachLayer[-1]);
 			}
-		}
-
-		
+		}		
+	}
+	
+	public NeuralNetwork(int neuronslayer[], float learningRate)
+	{
+		this(neuronslayer);
+		this.learningRate = learningRate;
 	}
 	/**
 	 * Functions

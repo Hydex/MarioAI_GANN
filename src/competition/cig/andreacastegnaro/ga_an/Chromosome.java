@@ -68,6 +68,22 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 		else return 0;
 	}
 
+	public void MutateGaussian(float mean, float deviation)
+	{
+		Random r = new Random();
+		Random increment = new Random((new Random()).nextLong());
+		int randomGene = increment.nextInt(11); //cambio geni a caso fino a raggiungere la dimensione dei geni, a passi di 10 max
+		while(randomGene < genes.size())
+		{
+			Double d = r.nextGaussian() * deviation + mean;
+			//Java casting di merda
+			float offset = d.floatValue();
+			genes.set(randomGene,genes.get(randomGene) + offset);
+			
+			randomGene += increment.nextInt(10) + 1;
+		}
+	}
+	
 	/**
 	 * Getter/Setter Functions
 	 */
