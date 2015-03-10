@@ -6,10 +6,6 @@ import java.security.InvalidParameterException;
 public class NeuralNetwork
 {
 
-	/**
-	 * Neural Net as a box: m input, n output, l layers
-	 */
-	
 	protected float inputs[];
 	protected float outputs[];
 	protected int outCount; //this track the total # outputs from net
@@ -22,10 +18,6 @@ public class NeuralNetwork
 	
 	protected float learningRate;
 
-	/**
-	 * Constructors
-	 */
-	
     /**
      * @param neuronsPerLayer
      */
@@ -61,9 +53,7 @@ public class NeuralNetwork
 		this(neuronslayer);
 		this.learningRate = learningRate;
 	}
-	/**
-	 * Functions
-	 */
+
 	/**
 	 * This function is meant to be used for the genetic algorithm implementation. 
 	 * It represents in that key lecture a gene
@@ -92,7 +82,7 @@ public class NeuralNetwork
 		
 	}
 	
-	private int GetNumberTotalWeights()
+	public int GetNumberTotalWeights()
 	{
 		int nofweigths = 0;
 		
@@ -103,9 +93,7 @@ public class NeuralNetwork
 		}
 		return nofweigths;
 	}
-	/**
-	 * Compute the output of the net
-	 */
+
 	public void ComputeNet()
 	{
 		float tempouts[] = null;
