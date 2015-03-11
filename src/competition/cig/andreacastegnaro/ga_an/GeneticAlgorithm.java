@@ -114,10 +114,8 @@ public class GeneticAlgorithm {
 		{
 			newPopulation.addAll(InitRandom(populationLeft,weightsCount));
 		}
-		
 		population = newPopulation;
-		copyPopulationToNet();
-		
+		copyPopulationToNet();		
 	}
 	
 	private void copyPopulationToNet()
@@ -135,11 +133,8 @@ public class GeneticAlgorithm {
 		for(int i = 0; i < listToCrossover.size(); i+=2)
 		{
 			retList.add(CrossOver(listToCrossover.get(i),listToCrossover.get(i+1)));
-		}
-		
-		
+		}	
 		return retList;
-			
 	}
 	
 	private Chromosome CrossOver(Chromosome c1, Chromosome c2)
