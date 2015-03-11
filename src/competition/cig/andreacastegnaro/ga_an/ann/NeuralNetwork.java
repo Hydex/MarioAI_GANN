@@ -2,6 +2,7 @@ package competition.cig.andreacastegnaro.ga_an.ann;
 
 //For neural network initialization
 import java.security.InvalidParameterException;
+import java.util.*;
 
 public class NeuralNetwork
 {
@@ -110,6 +111,22 @@ public class NeuralNetwork
 			if(i == layers.length - 1)
 			{
 				outputs = layers[i].GetOutputs();
+			}
+		}
+	}
+	
+	public void SetAllWeights(List<Float> weights)
+	{
+		int counter = 0;
+		for(NeuronLayer layer : layers)
+		{
+			for(Neuron neuron : layer.GetNeurons())
+			{
+				for(Connection link : neuron.GetConnections())
+				{
+					link.setWeight(weights.get(counter));
+					counter++;
+				}
 			}
 		}
 	}

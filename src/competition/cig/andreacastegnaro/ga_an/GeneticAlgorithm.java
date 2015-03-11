@@ -1,5 +1,4 @@
 package competition.cig.andreacastegnaro.ga_an;
-
 import competition.cig.andreacastegnaro.ga_an.ann.*;
 import java.util.*;
 import java.security.InvalidParameterException;
@@ -12,16 +11,16 @@ import java.security.InvalidParameterException;
 public class GeneticAlgorithm {
 	
 	protected int population_size;
-	
-	//we will use List because they will be very easy to sort
+
 	protected List<Chromosome> population;
 	protected List<NeuralNetwork> genes;
 	protected int[] layers;
 	
+	protected int weightsCount; //viene utile
+	
 	/**
 	 * Constructors
-	 */
-	
+	 */	
 	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[] )
 	{
 		if(population_size < 20)
@@ -30,19 +29,14 @@ public class GeneticAlgorithm {
 		}
 		population_size = pop_size;
 		population = new ArrayList<Chromosome>();
-
 		layers = nnetNeuronsPerLayer;
 		genes = new ArrayList<NeuralNetwork>();
 		
 		Init();
+		
+		weightsCount = genes.get(0).GetNumberTotalWeights();
 	}
-	
-	/**
-	 * Functions
-	 */
-	/**
-	 * Initialize the population in GA.
-	 */
+
 	private void Init() 
 	{	
 		for(int i = 0; i < this.population_size; i++)
@@ -52,7 +46,6 @@ public class GeneticAlgorithm {
 		}			
 	}
 	/**
-	 * Maybe to start training I will use 
 	 * @param popsize population size
 	 * @param chromesize number of genes componing the population member
 	 * @return List of chromosome for the current population
@@ -110,13 +103,74 @@ public class GeneticAlgorithm {
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
 		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 90));//Total 65
-		List<Chromosome> newPopPart3 = CloneChromosomeList(population.subList(0, 60));//Total 95
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 90));//Total 45
 		
 		newPopulation.addAll(newPopPart1);
+		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
+		//Repopulating
+		int populationLeft = population.size() - newPopulation.size();
 		
-		//Starting with implementing a multicrossover function for repopulation
+		if(populationLeft>0)
+		{
+			newPopulation.addAll(InitRandom(populationLeft,weightsCount));
+		}
 		
+		population = newPopulation;
+		copyPopulationToNet();
+		
+	}
+	
+	private void copyPopulationToNet()
+	{
+		for(int i = 0; i < genes.size(); i++)
+			genes.get(i).SetAllWeights(population.get(i).getGenes());
+	}
+	
+	private List<Chromosome> MultiCrossOver(List<Chromosome> listToCrossover, boolean shuffle)
+	{
+		if(shuffle)
+			Collections.shuffle(listToCrossover);
+		
+		List<Chromosome> retList = new ArrayList<Chromosome>();
+		for(int i = 0; i < listToCrossover.size(); i+=2)
+		{
+			retList.add(CrossOver(listToCrossover.get(i),listToCrossover.get(i+1)));
+		}
+		
+		
+		return retList;
+			
+	}
+	
+	private Chromosome CrossOver(Chromosome c1, Chromosome c2)
+	{
+		List<Float> newGenePart1;
+		List<Float> newGenePart2;
+		List<Float> tmpList = new ArrayList<Float>();
+		Chromosome newCromosome = new Chromosome();
+		Random r = new Random(new Random().nextLong());
+		
+		int splitSeparator = r.nextInt(weightsCount-1) + 1;
+		int combineMode = r.nextInt(2); //TODO check behavior here
+		
+		int geneLength = c2.getGenes().size();
+		if(combineMode==0)
+		{
+			newGenePart1 = c1.getGenes().subList(0, splitSeparator);
+			newGenePart2 = c2.getGenes().subList(splitSeparator, geneLength);
+		}
+		else
+		{
+			newGenePart1 = c2.getGenes().subList(0, splitSeparator);
+			newGenePart2 = c1.getGenes().subList(splitSeparator, geneLength);
+		}
+		
+		tmpList.addAll(newGenePart1);
+		tmpList.addAll(newGenePart2);
+				
+		newCromosome.SetGene(tmpList);
+		
+		return newCromosome;
 	}
 	
 	private List<Chromosome> CloneChromosomeList(List<Chromosome> listToClone)

@@ -92,6 +92,7 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 		for(float f : genes)
 			this.genes.add(f);	
 	}
+	public void SetGene(List<Float> genes){this.genes = genes;}
 	public double GetFitness(){return fit;}
 	public void SetFitness(double fitness){this.fit = fitness;}
 	public List<Float> getGenes(){return genes;}
