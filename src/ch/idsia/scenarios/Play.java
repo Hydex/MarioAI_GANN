@@ -64,7 +64,7 @@ public static void main(String[] args)
 {
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
     final Agent a = new ForwardAgent();
-    marioAIOptions.setAgent(a);
+    //marioAIOptions.setAgent(a);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     marioAIOptions.setVisualization(true);
 //        basicTask.reset(marioAIOptions);

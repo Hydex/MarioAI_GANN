@@ -47,7 +47,10 @@ public class GeneticAlgorithmTrainer {
 			System.out.println("Epochs: " + g);
 			
 			//Play mario with Neural Net's from the population
-			for(int p = 0; p <)
+			for(int p = 0; p < ga.GetPopulation().size(); p++)
+			{
+				//Agent controller = 
+			}
 		}
 	}
 	

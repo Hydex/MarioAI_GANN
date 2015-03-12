@@ -177,4 +177,9 @@ public class GeneticAlgorithm {
 		
 		return retList;
 	}
+	
+	public List<Chromosome> GetPopulation()
+	{
+		return population;
+	}
 }
