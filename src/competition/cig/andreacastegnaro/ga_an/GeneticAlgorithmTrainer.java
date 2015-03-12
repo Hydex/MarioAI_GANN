@@ -35,8 +35,8 @@ public class GeneticAlgorithmTrainer {
 	
 	private void trainPopulation()
 	{
-		double score;
-		
+		double score = 0;
+		int indexOfNet = 0;
 		this.seed = 2;
 		
 		for(int g = 0; g <= epochs; g++)
@@ -49,25 +49,23 @@ public class GeneticAlgorithmTrainer {
 			//Play mario with Neural Net's from the population
 			for(int p = 0; p < ga.GetPopulation().size(); p++)
 			{
-				//Agent controller = 
+				Agent controller = new MarioAgent_GA_NN(ga.GetNeuralNetworks().get(indexOfNet));
+				
+				
+				
+				indexOfNet++;
+				if((p%10)==0)
+					System.out.print(".");
 			}
 		}
 	}
 	
 	public static void main(String[] args)
 	{
-		//*
-		/**
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
 		int lvlDifficulty = 2;
 		int lvlLength = 1000;
 		int epochs = 0;
 		int geneSize = 100;
-		int[] netLayers = new int[]{5,10,5};
-		
+		int[] netLayers = new int[]{5,10,5};		
 	}
 }

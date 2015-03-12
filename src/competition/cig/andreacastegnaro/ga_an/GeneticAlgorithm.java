@@ -103,7 +103,7 @@ public class GeneticAlgorithm {
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
 		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 90));//Total 45
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 120));//Total 45
 		
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
@@ -181,5 +181,10 @@ public class GeneticAlgorithm {
 	public List<Chromosome> GetPopulation()
 	{
 		return population;
+	}
+	
+	public List<NeuralNetwork> GetNeuralNetworks()
+	{
+		return this.genes;
 	}
 }

@@ -131,6 +131,27 @@ public class NeuralNetwork
 		}
 	}
 	
+	public void SetInputs (float inputs[])
+	{
+		this.inputs = inputs;
+		try
+		{
+			//first layer
+			layers[0].SetLayerOutput(inputs);
+		}
+		catch(java.lang.Exception e) {System.out.println("Error: " + e);}
+	}
+	
+	public float[] GetOutputs()
+	{
+		return outputs;
+	}
+	
+	public int[] GetNeuronsPerLayer()
+	{
+		return neuronsEachLayer;
+	}
+	
 	/**
 	 * Providing an entry point for debugging
 	 * @param args

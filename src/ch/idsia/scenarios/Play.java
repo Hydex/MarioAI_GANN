@@ -64,6 +64,7 @@ public static void main(String[] args)
 {
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
     final Agent a = new ForwardAgent();
+    marioAIOptions.setTimeLimit(5000);
     //marioAIOptions.setAgent(a);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     marioAIOptions.setVisualization(true);

@@ -78,6 +78,19 @@ public class NeuronLayer
 		}
 	}
 	
+	//This is used for the first step
+	public void SetLayerOutput(float outputvalues[]) throws Exception
+	{
+		if(outputvalues.length == neurons.length)
+    	{
+    		for(int i = 0; i<neurons.length; i++)
+    		{
+    			neurons[i].SetOutputValue(outputvalues[i]);
+    			outputs[i] = neurons[i].GetOutputValue();
+    		}
+    	}	
+    	else throw new Exception("The number of input connections/values is not equal to the current number of input links/values.");
+	}
 	
 	/**
 	 * Getter functions
