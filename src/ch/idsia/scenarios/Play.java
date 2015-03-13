@@ -28,6 +28,8 @@
 package ch.idsia.scenarios;
 
 import ch.idsia.benchmark.tasks.BasicTask;
+import ch.idsia.benchmark.tasks.GamePlayTask;
+import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.benchmark.tasks.MarioCustomSystemOfValues;
 import ch.idsia.tools.MarioAIOptions;
 import ch.idsia.agents.*;
@@ -64,8 +66,9 @@ public static void main(String[] args)
 {
     final MarioAIOptions marioAIOptions = new MarioAIOptions(args);
     final Agent a = new ForwardAgent();
-    marioAIOptions.setTimeLimit(5000);
-    //marioAIOptions.setAgent(a);
+    marioAIOptions.setTimeLimit(400);
+    marioAIOptions.setFPS(99);
+    marioAIOptions.setAgent(a);
     final BasicTask basicTask = new BasicTask(marioAIOptions);
     marioAIOptions.setVisualization(true);
 //        basicTask.reset(marioAIOptions);
@@ -74,7 +77,8 @@ public static void main(String[] args)
 //        basicTask.runSingleEpisode();
     // run 1 episode with same options, each time giving output of Evaluation info.
     // verbose = false
-    basicTask.doEpisodes(1, false, 1);
+    basicTask.doEpisodes(5, true, 1);
+    EvaluationInfo info = basicTask.getEnvironment().getEvaluationInfo();
     System.out.println("\nEvaluationInfo: \n" + basicTask.getEnvironment().getEvaluationInfoAsString());
     System.out.println("\nCustom : \n" + basicTask.getEnvironment().getEvaluationInfo().computeWeightedFitness(m));
     System.exit(0);

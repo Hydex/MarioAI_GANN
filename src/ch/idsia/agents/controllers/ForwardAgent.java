@@ -52,7 +52,7 @@ public ForwardAgent()
 public void reset()
 {
     action = new boolean[Environment.numberOfKeys];
-    action[Mario.KEY_RIGHT] = false;
+    action[Mario.KEY_RIGHT] = true;
     action[Mario.KEY_SPEED] = false;
     trueJumpCounter = 0;
     trueSpeedCounter = 0;
@@ -61,15 +61,15 @@ public void reset()
 private boolean DangerOfAny()
 {
 
-//        if ((getReceptiveFieldCellValue(marioEgoRow + 2, marioEgoCol + 1) == 0 &&
-//            getReceptiveFieldCellValue(marioEgoRow + 1, marioEgoCol + 1) == 0) ||
-//            getReceptiveFieldCellValue(marioEgoRow, marioEgoCol + 1) != 0 ||
-//            getReceptiveFieldCellValue(marioEgoRow, marioEgoCol + 2) != 0 ||
-//            getEnemiesCellValue(marioEgoRow, marioEgoCol + 1) != 0 ||
-//            getEnemiesCellValue(marioEgoRow, marioEgoCol + 2) != 0)
+        if ((getReceptiveFieldCellValue(marioEgoRow + 2, marioEgoCol + 1) == 0 &&
+            getReceptiveFieldCellValue(marioEgoRow + 1, marioEgoCol + 1) == 0) ||
+            getReceptiveFieldCellValue(marioEgoRow, marioEgoCol + 1) != 0 ||
+           getReceptiveFieldCellValue(marioEgoRow, marioEgoCol + 2) != 0 ||
+            getEnemiesCellValue(marioEgoRow, marioEgoCol + 1) != 0 ||
+            getEnemiesCellValue(marioEgoRow, marioEgoCol + 2) != 0)
 		
-            //return true;
-        //else
+            return true;
+        else
             return false;
 }
 public boolean[] getAction()
@@ -96,8 +96,8 @@ public boolean[] getAction()
         action[Mario.KEY_JUMP] = false;
     }
     //System.out.println(marioEgoRow + " " + marioEgoCol);
-    System.out.println("Enemies: " + getEnemiesCellValue(marioEgoRow,marioEgoCol));
-    System.out.println("Reception: " + getReceptiveFieldCellValue(marioEgoRow,marioEgoCol));
+    //System.out.println("Enemies: " + getEnemiesCellValue(marioEgoRow,marioEgoCol));
+    //System.out.println("Reception: " + getReceptiveFieldCellValue(marioEgoRow,marioEgoCol));
     return action;
 }
 }

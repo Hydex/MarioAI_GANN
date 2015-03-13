@@ -2,6 +2,10 @@ package competition.cig.andreacastegnaro.ga_an;
 
 import competition.cig.andreacastegnaro.ga_an.ann.*;
 import ch.idsia.agents.Agent;
+import ch.idsia.benchmark.tasks.ProgressTask;
+import ch.idsia.benchmark.tasks.Task;
+import ch.idsia.tools.EvaluationInfo;
+import ch.idsia.tools.MarioAIOptions;
 /**
  * This class will train the neural network using the genetic algorithm principles
  * It will save the best trained agent in a file which can be imported separetely for future use
@@ -12,6 +16,7 @@ public class GeneticAlgorithmTrainer {
 
 	private int lvlDifficulty;
 	private int lvlLength = -1;
+	
 	final int trials = 1;
 	private int epochs;
 	
@@ -51,13 +56,51 @@ public class GeneticAlgorithmTrainer {
 			{
 				Agent controller = new MarioAgent_GA_NN(ga.GetNeuralNetworks().get(indexOfNet));
 				
-				
-				
+				for (int levelseed = 1; levelseed <= 15; levelseed++)
+				{
+					score += PlaySingleNet(controller, seed);
+				}
 				indexOfNet++;
 				if((p%10)==0)
 					System.out.print(".");
 			}
 		}
+	}
+	
+	public double PlaySingleNet(Agent controller, int seed)
+	{
+		MarioAIOptions marioAIOptions = new MarioAIOptions(new String[0]);
+		
+		marioAIOptions.setAgent(controller);        
+    	Task task = new ProgressTask(marioAIOptions);
+    	
+    	marioAIOptions.setVisualization(true);
+    	marioAIOptions.setLevelRandSeed((int) seed);//(Math.random () * Integer.MAX_VALUE));
+    	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
+        	    	        
+        if(lvlLength != -1)
+        	marioAIOptions.setLevelLength(lvlLength);
+        	
+    	//marioAIOptions.setTimeLimit(marioAIOptions.getTimeLimit()/2);
+        
+        double fitness = Test(controller, marioAIOptions, seed); 
+        return fitness;
+		
+	}
+	
+	public double Test(Agent controller, MarioAIOptions options, int seed)
+	{
+		double distancePassed = 0;
+		int kills = 0;
+		int killsSum = 0;
+		int timeLeftSum = 0;
+		int timeLeft = 0;
+		int marioModeSum = 0;
+		int marioMode = 0;
+		double dp = 0;
+       
+       return 0;
+       
 	}
 	
 	public static void main(String[] args)
