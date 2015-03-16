@@ -77,9 +77,10 @@ public static void main(String[] args)
 //        basicTask.runSingleEpisode();
     // run 1 episode with same options, each time giving output of Evaluation info.
     // verbose = false
-    basicTask.doEpisodes(5, true, 1);
+    basicTask.doEpisodes(1, true, 1);
     EvaluationInfo info = basicTask.getEnvironment().getEvaluationInfo();
     System.out.println("\nEvaluationInfo: \n" + basicTask.getEnvironment().getEvaluationInfoAsString());
+    //System.out.println("\nEvaluationInfoInt: \n" + basicTask.getEnvironment().getEvaluationInfoAsInts());
     System.out.println("\nCustom : \n" + basicTask.getEnvironment().getEvaluationInfo().computeWeightedFitness(m));
     System.exit(0);
 }

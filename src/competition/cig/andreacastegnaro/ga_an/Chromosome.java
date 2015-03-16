@@ -30,6 +30,7 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 	public Chromosome(List<Float> gene)
 	{
 		this.genes = gene;
+		this.fit = 0;
 	}
 	
 	public Chromosome(float[] genes)
@@ -89,11 +90,12 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 	 */
 	public void SetGene(float[] genes)
 	{
+		this.genes = new ArrayList<Float>();
 		for(float f : genes)
 			this.genes.add(f);	
 	}
 	public void SetGene(List<Float> genes){this.genes = genes;}
 	public double GetFitness(){return fit;}
 	public void SetFitness(double fitness){this.fit = fitness;}
-	public List<Float> getGenes(){return genes;}
+	public List<Float> getGenes(){return this.genes;}
 }

@@ -1,5 +1,6 @@
 package competition.cig.andreacastegnaro.ga_an;
 import competition.cig.andreacastegnaro.ga_an.ann.*;
+
 import java.util.*;
 import java.security.InvalidParameterException;
 /**
@@ -15,15 +16,17 @@ public class GeneticAlgorithm {
 	protected List<Chromosome> population;
 	protected List<NeuralNetwork> genes;
 	protected int[] layers;
-	
+		
 	protected int weightsCount; //viene utile
+	
+	protected FileSaver annSavedFile;
 	
 	/**
 	 * Constructors
 	 */	
 	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[] )
 	{
-		if(population_size < 20)
+		if(pop_size < 20)
 		{
 			throw new InvalidParameterException("Invalid population_size. Cannot evolve such few population");
 		}
@@ -37,11 +40,18 @@ public class GeneticAlgorithm {
 		weightsCount = genes.get(0).GetNumberTotalWeights();
 	}
 
+	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[], String trainedFile )
+	{
+		this(pop_size,nnetNeuronsPerLayer);
+		annSavedFile = new FileSaver(trainedFile);
+	}
+	
 	private void Init() 
 	{	
 		for(int i = 0; i < this.population_size; i++)
 		{
 			genes.add(new NeuralNetwork(layers, 0.1f));
+			//Taking form the just created gene(neural net) all the weights to be considered as a chromosome
 			population.add(new Chromosome(genes.get(i).GetTotalWeights()));
 		}			
 	}
@@ -50,20 +60,24 @@ public class GeneticAlgorithm {
 	 * @param chromesize number of genes componing the population member
 	 * @return List of chromosome for the current population
 	 */
-	private List<Chromosome> InitRandom(int popsize, int chromesize)
+	private List<Chromosome> InitRandom(int popsize)
 	{
+		if(this.weightsCount == 0)
+			throw new InvalidParameterException("Chromosome must be already be set");
 		List<Float> newGenes;
 		List<Chromosome> retPop = new ArrayList<Chromosome>();
 		
 		Random r_float = new Random(new Random().nextLong());
 		
-		for(int i=0; i<popsize;i++)
+		for(int i=0; i< popsize ;i++)
 		{
 			newGenes = new ArrayList<Float>();
-			for(int j=0; j<chromesize;j++)
+			
+			for(int j=0; j< this.weightsCount ;j++)
 			{
 				newGenes.add(r_float.nextFloat()*1000000 % 2.0f - 1.0f); //weights are number between -1 and 1
 			}
+			
 			retPop.add(new Chromosome(newGenes));
 		}	
 		return retPop; 
@@ -102,19 +116,22 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 120));//Total 45
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 5));//Total 5
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 20));//Total 15
 		
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
 		//Repopulating
 		int populationLeft = population.size() - newPopulation.size();
+		System.out.println("New random population added: " + populationLeft);
 		
 		if(populationLeft>0)
 		{
-			newPopulation.addAll(InitRandom(populationLeft,weightsCount));
+			List<Chromosome> newPopPart3 = new ArrayList<Chromosome>();
+			newPopPart3 = InitRandom(populationLeft);
+			newPopulation.addAll(newPopPart3);
 		}
-		population = newPopulation;
+		this.population = newPopulation;
 		copyPopulationToNet();		
 	}
 	
@@ -126,9 +143,12 @@ public class GeneticAlgorithm {
 	
 	private List<Chromosome> MultiCrossOver(List<Chromosome> listToCrossover, boolean shuffle)
 	{
+		if(listToCrossover.size()%2 != 0)
+			throw new InvalidParameterException("MultiCrossOver has to be even");
+		
 		if(shuffle)
 			Collections.shuffle(listToCrossover);
-		
+				
 		List<Chromosome> retList = new ArrayList<Chromosome>();
 		for(int i = 0; i < listToCrossover.size(); i+=2)
 		{
@@ -139,16 +159,17 @@ public class GeneticAlgorithm {
 	
 	private Chromosome CrossOver(Chromosome c1, Chromosome c2)
 	{
-		List<Float> newGenePart1;
-		List<Float> newGenePart2;
+		List<Float> newGenePart1 = new ArrayList<Float>();
+		List<Float> newGenePart2 = new ArrayList<Float>();
 		List<Float> tmpList = new ArrayList<Float>();
 		Chromosome newCromosome = new Chromosome();
-		Random r = new Random(new Random().nextLong());
+		Random r = new Random(1);
 		
-		int splitSeparator = r.nextInt(weightsCount-1) + 1;
+		int splitSeparator = r.nextInt(this.weightsCount - 1) + 1;
 		int combineMode = r.nextInt(2); //TODO check behavior here
 		
 		int geneLength = c2.getGenes().size();
+		
 		if(combineMode==0)
 		{
 			newGenePart1 = c1.getGenes().subList(0, splitSeparator);
@@ -164,6 +185,9 @@ public class GeneticAlgorithm {
 		tmpList.addAll(newGenePart2);
 				
 		newCromosome.SetGene(tmpList);
+		
+		if(c1.getGenes().size() != newCromosome.getGenes().size())
+			throw new InvalidParameterException("Invalid number of weights in one of the chromosomes in the Crossover.");
 		
 		return newCromosome;
 	}

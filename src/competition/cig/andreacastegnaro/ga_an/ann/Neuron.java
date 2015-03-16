@@ -1,5 +1,5 @@
 package competition.cig.andreacastegnaro.ga_an.ann;
-
+import java.io.Serializable;
 /**
  * The Neuron class will handle the output on the single neuron:
  * It will need to track all the input connections coming from previous layer and output to the next layer
@@ -7,7 +7,8 @@ package competition.cig.andreacastegnaro.ga_an.ann;
  * Put as a reference also in the final document
  */
 
-public class Neuron {
+public class Neuron implements Serializable
+{
 
 	/**
 	 * Member variables
@@ -25,18 +26,31 @@ public class Neuron {
 		this.outputValue = 0.0f;
 	}
 	
-	public Neuron(int connectionsCount)
+	public Neuron(int connectionsCount, boolean bias)
 	{
 		this.numInputLinks = connectionsCount;
-		this.connectionLinks = new Connection[connectionsCount];
+		
+		if(bias)
+			this.connectionLinks = new Connection[connectionsCount + 1];
+		else
+			this.connectionLinks = new Connection[connectionsCount];
+		
+		//this.connectionLinks = new Connection[connectionsCount];
+		
 		for(int i = 0; i<numInputLinks; ++i)
 		{
 			connectionLinks[i] = new Connection();
 		}
-		this.outputValue = 0.0f;
+		
+		if(bias)
+        	SetBias("BIAS", -1);
+		
+		this.outputValue = 0;
+		
+		
 	}
 	
-	public Neuron(float input[])
+/*	public Neuron(float input[])
 	{
 		this.numInputLinks = input.length;
 		connectionLinks = new Connection[numInputLinks];
@@ -45,7 +59,7 @@ public class Neuron {
 			connectionLinks[i] = new Connection(input[i]);
 		}
 		this.outputValue = 0.0f;
-	}
+	}*/
 	
 	public Neuron(Connection connectionlinks[])
 	{
@@ -55,17 +69,26 @@ public class Neuron {
 	/**
 	 * Functions
 	 */
+	public void SetBias(String name, float inputVal)
+	{
+		connectionLinks[this.numInputLinks] = new Connection(name, inputVal);
+	}
+	
 	public void SetInputValues(float input[]) throws Exception
 	{
-		if(input.length == connectionLinks.length)
+		if(input.length == connectionLinks.length - 1) //Last link is the bias, we don t touch it
 		{
 			for(int i = 0; i < connectionLinks.length; i++)
 			{
-				connectionLinks[i].setInputValue(input[i]);
+				if(!connectionLinks[i].GetName().equals("BIAS"))
+				{
+					connectionLinks[i].setInputValue(input[i]);
+				}
 			}
 		}
 		else throw new Exception("Number of connections does not match");
 	}
+	
     public void SetOutputValue(float outputValue)
     {
     	this.outputValue = outputValue;
@@ -93,8 +116,8 @@ public class Neuron {
 	/**
 	 * Getter functions
 	 */
-	public float GetNumeberInputConnections(){return numInputLinks;}
+	public int GetNumberInputConnections(){return numInputLinks;}
 	public Connection[] GetConnections() {return connectionLinks;}
-	public float GetOutputValue(){return outputValue;}
+	public float GetOutputValue(){return this.outputValue;}
 	
 }

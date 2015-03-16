@@ -1,5 +1,5 @@
 package competition.cig.andreacastegnaro.ga_an.ann;
-
+import java.io.Serializable;
 /**
  * 
  * @author Andrea
@@ -9,7 +9,7 @@ package competition.cig.andreacastegnaro.ga_an.ann;
  * Use neuron class for activating and set all the output values.
  */
 
-public class NeuronLayer
+public class NeuronLayer implements Serializable
 {
 	/**
 	 * Member functions
@@ -25,13 +25,13 @@ public class NeuronLayer
 	 * @param numNeurons
 	 * @param numInputLinksPerNeuron
 	 */
-    public NeuronLayer(int numNeurons, int numInputLinksPerNeuron)
+    public NeuronLayer(int numNeurons, int numInputLinksPerNeuron, boolean bias)
     {
         this.neuronsCount = numNeurons;
-        outputs = new float[numNeurons];
-        neurons = new Neuron[numNeurons];
+        this.outputs = new float[numNeurons];
+        this.neurons = new Neuron[numNeurons];
         for(int i = 0; i<numNeurons; i++)
-            neurons[i] = new Neuron(numInputLinksPerNeuron);
+            this.neurons[i] = new Neuron(numInputLinksPerNeuron,bias);
     }
     
 	/**
@@ -41,10 +41,10 @@ public class NeuronLayer
     public NeuronLayer(int numNeurons)
     {
         this.neuronsCount = numNeurons;
-        outputs = new float[numNeurons];
-        neurons = new Neuron[numNeurons];
+        this.outputs = new float[numNeurons];
+        this.neurons = new Neuron[numNeurons];
         for(int i = 0; i<numNeurons; i++)
-            neurons[i] = new Neuron();
+            this.neurons[i] = new Neuron();
     }
 	
 	public NeuronLayer(Neuron neurons[])
@@ -56,7 +56,7 @@ public class NeuronLayer
 	 */
 	public void CalculateLayerOutput()
 	{
-		for(int i = 0; i < neuronsCount; i++)
+		for(int i = 0; i < this.neuronsCount; i++)
 		{
 			neurons[i].Activate();
 			outputs[i] = neurons[i].GetOutputValue();

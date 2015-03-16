@@ -52,15 +52,15 @@ public static void main(String[] args)
           final BasicTask basicTask = new BasicTask(marioAIOptions);
           for (int i = 0; i < 10; ++i)
           {
-              int seed = 0;
+              
               //do
               //{
                 marioAIOptions.setLevelDifficulty(0);
                 marioAIOptions.setLevelRandSeed(i);
             	basicTask.setOptionsAndReset(marioAIOptions);
-                basicTask.runSingleEpisode(1);
-            	//basicTask.doEpisodes(1,true,1);
-//    			System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
+                //basicTask.runSingleEpisode(1);
+            	basicTask.doEpisodes(1,true,1);
+    			//System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());
               //} while (basicTask.getEnvironment().getEvaluationInfo().marioStatus != Environment.MARIO_STATUS_WIN);
           }
 //

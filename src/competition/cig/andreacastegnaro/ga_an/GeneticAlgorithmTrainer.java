@@ -2,7 +2,7 @@ package competition.cig.andreacastegnaro.ga_an;
 
 import competition.cig.andreacastegnaro.ga_an.ann.*;
 import ch.idsia.agents.Agent;
-import ch.idsia.benchmark.tasks.ProgressTask;
+import ch.idsia.benchmark.tasks.GamePlayTask;
 import ch.idsia.benchmark.tasks.Task;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.MarioAIOptions;
@@ -28,13 +28,27 @@ public class GeneticAlgorithmTrainer {
 	private int nLevelWins = 0;
 	private boolean changeLvl = false;
 	
-	private GeneticAlgorithmTrainer(int difficulty, int lvlLenght, int repopulations, int geneSize, int[] layers)
+	private EvaluationInfo evInfo;
+	private String trainedFile = "";
+	
+	private GeneticAlgorithmTrainer(int difficulty, int lvlLenght, int repopulations, int geneSize, int[] layers, String trained)
 	{
 		this.lvlDifficulty = difficulty;
 		this.lvlLength = lvlLenght;
 		this.layers = layers;
 		this.epochs = repopulations;
-		ga = new GeneticAlgorithm(geneSize, layers);
+		this.trainedFile = trained;
+		if(this.trainedFile.equals(""))
+		{
+			ga = new GeneticAlgorithm(geneSize, layers);
+		}
+		else
+		{
+			ga = new GeneticAlgorithm(geneSize, layers, this.trainedFile);
+		}
+		
+		
+		
 		trainPopulation();
 	}
 	
@@ -42,29 +56,44 @@ public class GeneticAlgorithmTrainer {
 	{
 		double score = 0;
 		int indexOfNet = 0;
-		this.seed = 2;
+		this.seed = 1;
 		
 		for(int g = 0; g <= epochs; g++)
 		{
 			if(g > 0)
 				ga.GetPopulationFromNetSet();
 			
-			System.out.println("Epochs: " + g);
+			System.out.println("Epoch: " + g);
 			
 			//Play mario with Neural Net's from the population
 			for(int p = 0; p < ga.GetPopulation().size(); p++)
 			{
 				Agent controller = new MarioAgent_GA_NN(ga.GetNeuralNetworks().get(indexOfNet));
 				
-				for (int levelseed = 1; levelseed <= 15; levelseed++)
+				for (int levelseed = 1; levelseed <= 2; levelseed++)
 				{
-					score += PlaySingleNet(controller, seed);
+					score += PlaySingleNet(controller, levelseed);
 				}
+				
+				ga.GetPopulation().get(indexOfNet).SetFitness(score);
+				
+				System.out.println("Fitness Score: " + score);
+				
 				indexOfNet++;
+				score = 0;
+				
 				if((p%10)==0)
 					System.out.print(".");
 			}
+			indexOfNet = 0;
+			System.out.println();
+			System.out.println("Repopulating");
+			ga.Repopulate();
 		}
+		
+		ga.SortPopulationAfterFitness();
+		
+		System.exit (0);
 	}
 	
 	public double PlaySingleNet(Agent controller, int seed)
@@ -72,43 +101,103 @@ public class GeneticAlgorithmTrainer {
 		MarioAIOptions marioAIOptions = new MarioAIOptions(new String[0]);
 		
 		marioAIOptions.setAgent(controller);        
-    	Task task = new ProgressTask(marioAIOptions);
+    	GamePlayTask task = new GamePlayTask(marioAIOptions);
     	
     	marioAIOptions.setVisualization(true);
-    	marioAIOptions.setLevelRandSeed((int) seed);//(Math.random () * Integer.MAX_VALUE));
+    	marioAIOptions.setLevelRandSeed(seed);//(Math.random () * Integer.MAX_VALUE));
     	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
-        	    	        
+    	marioAIOptions.setTimeLimit(8);
+    	marioAIOptions.setFPS(99);
+    	
         if(lvlLength != -1)
         	marioAIOptions.setLevelLength(lvlLength);
         	
     	//marioAIOptions.setTimeLimit(marioAIOptions.getTimeLimit()/2);
         
-        double fitness = Test(controller, marioAIOptions, seed); 
+        double fitness = Test(controller, task, seed); 
         return fitness;
 		
 	}
 	
-	public double Test(Agent controller, MarioAIOptions options, int seed)
+	public double Test(Agent controller, GamePlayTask task, int seed)
 	{
 		double distancePassed = 0;
 		int kills = 0;
-		int killsSum = 0;
-		int timeLeftSum = 0;
 		int timeLeft = 0;
-		int marioModeSum = 0;
 		int marioMode = 0;
 		double dp = 0;
        
-       return 0;
+		task.doEpisodes(1, false, 1);
+		
+		EvaluationInfo info = task.getEnvironment().getEvaluationInfo();
+		//evInfo = info;
+		distancePassed = info.distancePassedPhys;
+		kills = info.killsTotal;
+		timeLeft = info.timeLeft;
+		marioMode = info.marioMode;
+		
+		boolean falledInAGap = info.Memo.equals("Gap");
+		
+		double computedFit = ComputeFitness(distancePassed, timeLeft, kills, marioMode, falledInAGap);		
+		
+		//System.out.println("\nEvaluationInfo: \n" + task.getEnvironment().getEvaluationInfoAsString());
+				
+		return computedFit;
        
+	}
+	
+	private double ComputeFitness(double dist, int timeLeft, int kills, int marioMode, boolean isInGap)
+	{
+		double fitness = (dist * 10);
+		if(isInGap)
+		{
+			marioMode = 0;
+			fitness = -5000;
+		}
+		
+		int bonusDistance = 2000;
+		
+		if(dist >= bonusDistance)
+		{
+			fitness *= (marioMode + 1);
+			fitness += kills * 10 + timeLeft * 2;
+			
+			if(marioMode==2)
+			{
+				fitness += 5000;
+			}
+			else if(marioMode == 1)
+			{
+				fitness += 2500;
+			}
+			
+		}
+		else
+		{
+			fitness *= (marioMode + 1);
+		}
+		
+		return fitness;
+	}
+	
+	public void PrintEvaluation()
+	{
+		if(evInfo != null)
+		{
+			//evInfo.P
+		}
 	}
 	
 	public static void main(String[] args)
 	{
 		int lvlDifficulty = 2;
 		int lvlLength = 1000;
-		int epochs = 0;
-		int geneSize = 100;
-		int[] netLayers = new int[]{5,10,5};		
+		int epochs = 10;
+		int geneSize = 20;
+		int[] netLayers = new int[]{5,10,6};
+		
+		String  trainedGANN = "BestAgentNN.data";
+		
+		new GeneticAlgorithmTrainer(lvlDifficulty, lvlLength, epochs, geneSize, netLayers, trainedGANN);
 	}
 }

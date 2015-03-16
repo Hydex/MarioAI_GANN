@@ -3,8 +3,9 @@ package competition.cig.andreacastegnaro.ga_an.ann;
 //For neural network initialization
 import java.security.InvalidParameterException;
 import java.util.*;
+import java.io.Serializable;
 
-public class NeuralNetwork
+public class NeuralNetwork implements Serializable
 {
 
 	protected float inputs[];
@@ -44,7 +45,7 @@ public class NeuralNetwork
 			}
 			else
 			{
-				layers[i] = new NeuronLayer(neuronsEachLayer[i],neuronsEachLayer[-1]);
+				layers[i] = new NeuronLayer(neuronsEachLayer[i],neuronsEachLayer[i-1],true);
 			}
 		}		
 	}
@@ -65,16 +66,16 @@ public class NeuralNetwork
 		int weightsCount = GetNumberTotalWeights();
 		float weigths[] = new float[weightsCount];
 		
-		int cuonter  = 0;
+		int count  = 0;
 		
-		for (NeuronLayer layer : layers)
+		for (NeuronLayer layer : this.layers)
 		{
 			for (Neuron neuron : layer.GetNeurons())
 			{
 				for(Connection link : neuron.GetConnections())
 				{
-					weigths[cuonter] = link.getWeight();
-					cuonter++;
+					weigths[count] = link.getWeight();
+					count++;
 				}
 			}
 		}
@@ -90,8 +91,17 @@ public class NeuralNetwork
 		for(int i = 0; i < neuronsEachLayer.length - 1; i++)
 		{
 			//dato n output e m input al livello successivo il numero di pesi e' n * m 
-			nofweigths += neuronsEachLayer[i+1] * neuronsEachLayer[i];
+			nofweigths += neuronsEachLayer[i+1] * (neuronsEachLayer[i] + 1);
 		}
+		
+		//for(NeuronLayer layer : layers)
+		//{
+		//	for(Neuron neuron : layer.GetNeurons())
+		//	{
+		//		nofweigths += neuron.GetNumberInputConnections();
+		//	}
+		//}
+		
 		return nofweigths;
 	}
 
@@ -118,12 +128,15 @@ public class NeuralNetwork
 	public void SetAllWeights(List<Float> weights)
 	{
 		int counter = 0;
+		int stop = GetNumberTotalWeights();
 		for(NeuronLayer layer : layers)
 		{
 			for(Neuron neuron : layer.GetNeurons())
 			{
 				for(Connection link : neuron.GetConnections())
 				{
+					if(counter == weights.size())
+						throw new InvalidParameterException("Counter can be greater of weights size");
 					link.setWeight(weights.get(counter));
 					counter++;
 				}
@@ -144,7 +157,7 @@ public class NeuralNetwork
 	
 	public float[] GetOutputs()
 	{
-		return outputs;
+		return this.outputs;
 	}
 	
 	public int[] GetNeuronsPerLayer()
