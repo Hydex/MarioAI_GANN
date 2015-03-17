@@ -165,6 +165,9 @@ public class NeuralNetwork implements Serializable
 		return neuronsEachLayer;
 	}
 	
+	public void SetLearningRate(float learningRate) {
+		this.learningRate = learningRate;
+	}
 	/**
 	 * Providing an entry point for debugging
 	 * @param args

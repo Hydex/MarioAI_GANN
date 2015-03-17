@@ -2,8 +2,7 @@ package competition.cig.andreacastegnaro.ga_an;
 
 import competition.cig.andreacastegnaro.ga_an.ann.*;
 import ch.idsia.agents.Agent;
-import ch.idsia.benchmark.tasks.GamePlayTask;
-import ch.idsia.benchmark.tasks.Task;
+import ch.idsia.benchmark.tasks.*;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.MarioAIOptions;
 /**
@@ -45,10 +44,7 @@ public class GeneticAlgorithmTrainer {
 		else
 		{
 			ga = new GeneticAlgorithm(geneSize, layers, this.trainedFile);
-		}
-		
-		
-		
+		}		
 		trainPopulation();
 	}
 	
@@ -58,7 +54,7 @@ public class GeneticAlgorithmTrainer {
 		int indexOfNet = 0;
 		this.seed = 1;
 		
-		for(int g = 0; g <= epochs; g++)
+		for(int g = 0; g < epochs; g++)
 		{
 			if(g > 0)
 				ga.GetPopulationFromNetSet();
@@ -70,7 +66,7 @@ public class GeneticAlgorithmTrainer {
 			{
 				Agent controller = new MarioAgent_GA_NN(ga.GetNeuralNetworks().get(indexOfNet));
 				
-				for (int levelseed = 1; levelseed <= 2; levelseed++)
+				for (int levelseed = 0; levelseed < 10; levelseed++)
 				{
 					score += PlaySingleNet(controller, levelseed);
 				}
@@ -82,16 +78,24 @@ public class GeneticAlgorithmTrainer {
 				indexOfNet++;
 				score = 0;
 				
-				if((p%10)==0)
-					System.out.print(".");
+				//if((p%10)==0)
+				//	System.out.print(".");
 			}
 			indexOfNet = 0;
 			System.out.println();
 			System.out.println("Repopulating");
 			ga.Repopulate();
+			
+			if(g!=0 && (g%10)==0) //Save the best calculated agent after each 10th repopulation.
+			{
+				System.out.print("...SAVING...");
+				ga.SaveANN();
+				System.out.println("...SAVING DONE...");
+			}
 		}
 		
 		ga.SortPopulationAfterFitness();
+		ga.SaveANN();
 		
 		System.exit (0);
 	}
@@ -101,12 +105,12 @@ public class GeneticAlgorithmTrainer {
 		MarioAIOptions marioAIOptions = new MarioAIOptions(new String[0]);
 		
 		marioAIOptions.setAgent(controller);        
-    	GamePlayTask task = new GamePlayTask(marioAIOptions);
+    	BasicTask task = new BasicTask(marioAIOptions);
     	
-    	marioAIOptions.setVisualization(true);
+    	marioAIOptions.setVisualization(false);
     	marioAIOptions.setLevelRandSeed(seed);//(Math.random () * Integer.MAX_VALUE));
     	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
-    	marioAIOptions.setTimeLimit(8);
+    	marioAIOptions.setTimeLimit(20);
     	marioAIOptions.setFPS(99);
     	
         if(lvlLength != -1)
@@ -119,7 +123,7 @@ public class GeneticAlgorithmTrainer {
 		
 	}
 	
-	public double Test(Agent controller, GamePlayTask task, int seed)
+	public double Test(Agent controller, BasicTask task, int seed)
 	{
 		double distancePassed = 0;
 		int kills = 0;
@@ -155,9 +159,9 @@ public class GeneticAlgorithmTrainer {
 			fitness = -5000;
 		}
 		
-		int bonusDistance = 2000;
+		int bonusDistance = this.lvlLength/2;
 		
-		if(dist >= bonusDistance)
+		if(dist > bonusDistance)
 		{
 			fitness *= (marioMode + 1);
 			fitness += kills * 10 + timeLeft * 2;
@@ -190,13 +194,13 @@ public class GeneticAlgorithmTrainer {
 	
 	public static void main(String[] args)
 	{
-		int lvlDifficulty = 2;
+		int lvlDifficulty = 0;
 		int lvlLength = 1000;
-		int epochs = 10;
-		int geneSize = 20;
-		int[] netLayers = new int[]{5,10,6};
+		int epochs = 50;
+		int geneSize = 50;
+		int[] netLayers = new int[]{5,7,6};
 		
-		String  trainedGANN = "BestAgentNN.data";
+		String trainedGANN = "BestAgentNN.data";
 		
 		new GeneticAlgorithmTrainer(lvlDifficulty, lvlLength, epochs, geneSize, netLayers, trainedGANN);
 	}

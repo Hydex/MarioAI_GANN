@@ -137,7 +137,7 @@ public void doEpisodes(int amount, boolean verbose, final int repetitionsOfSingl
         }
     }
 
-    System.out.println(statistics.get(3).toString());
+    //System.out.println(statistics.get(3).toString());
 }
 
 public boolean isFinished()

@@ -1,11 +1,12 @@
 package competition.cig.andreacastegnaro.ga_an.ann;
 
 import java.util.Random;
+import java.io.Serializable;
 
-public class Connection {
+public class Connection implements Serializable
+{
 
-	//TODO adding correction logic
-	/**
+	 /**
 	 * Member variables
 	 */	
 	private float weight;

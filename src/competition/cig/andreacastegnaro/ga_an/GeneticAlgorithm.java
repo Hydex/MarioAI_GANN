@@ -2,6 +2,7 @@ package competition.cig.andreacastegnaro.ga_an;
 import competition.cig.andreacastegnaro.ga_an.ann.*;
 
 import java.util.*;
+import java.io.IOException;
 import java.security.InvalidParameterException;
 /**
  * This class will be the responsible for changing the weights to the neural network.
@@ -116,8 +117,8 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 5));//Total 5
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 20));//Total 15
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 15));//Total 15
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 50));//Total 40
 		
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
@@ -163,7 +164,7 @@ public class GeneticAlgorithm {
 		List<Float> newGenePart2 = new ArrayList<Float>();
 		List<Float> tmpList = new ArrayList<Float>();
 		Chromosome newCromosome = new Chromosome();
-		Random r = new Random(1);
+		Random r = new Random(new Random().nextLong());
 		
 		int splitSeparator = r.nextInt(this.weightsCount - 1) + 1;
 		int combineMode = r.nextInt(2); //TODO check behavior here
@@ -210,5 +211,14 @@ public class GeneticAlgorithm {
 	public List<NeuralNetwork> GetNeuralNetworks()
 	{
 		return this.genes;
+	}
+	
+	public void SaveANN()
+	{
+    	try 
+    	{
+    		this.annSavedFile.save(this.genes.get(0));
+		} 
+    	catch (IOException e) {e.printStackTrace();}
 	}
 }
