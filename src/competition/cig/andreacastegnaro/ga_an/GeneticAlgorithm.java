@@ -117,11 +117,13 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 15));//Total 15
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 50));//Total 40
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 80));//Total 60
+		List<Chromosome> newPopPart3 = CloneChromosomeList(population.subList(0,60));//Total 90
 		
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
+		newPopulation.addAll(MultiMutateCrossOver(newPopPart3,true));
 		//Repopulating
 		int populationLeft = population.size() - newPopulation.size();
 		System.out.println("New random population added: " + populationLeft);
@@ -156,6 +158,18 @@ public class GeneticAlgorithm {
 			retList.add(CrossOver(listToCrossover.get(i),listToCrossover.get(i+1)));
 		}	
 		return retList;
+	}
+	
+	private List<Chromosome> MultiMutateCrossover(List<Chromosome> listToMutate, boolean shuffle)
+	{
+		if(listToMutate.size()%2 != 0)
+			throw new InvalidParameterException("MultiMutateCrossOver has to be even");
+		
+		if(shuffle)
+			Collections.shuffle(listToMutate);
+		
+		
+
 	}
 	
 	private Chromosome CrossOver(Chromosome c1, Chromosome c2)

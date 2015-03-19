@@ -73,7 +73,7 @@ public class GeneticAlgorithmTrainer {
 				
 				ga.GetPopulation().get(indexOfNet).SetFitness(score);
 				
-				System.out.println("Fitness Score: " + score);
+				//System.out.println("Fitness Score: " + score);
 				
 				indexOfNet++;
 				score = 0;
@@ -110,7 +110,7 @@ public class GeneticAlgorithmTrainer {
     	marioAIOptions.setVisualization(false);
     	marioAIOptions.setLevelRandSeed(seed);//(Math.random () * Integer.MAX_VALUE));
     	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
-    	marioAIOptions.setTimeLimit(20);
+    	marioAIOptions.setTimeLimit(200);
     	marioAIOptions.setFPS(99);
     	
         if(lvlLength != -1)
@@ -196,9 +196,9 @@ public class GeneticAlgorithmTrainer {
 	{
 		int lvlDifficulty = 0;
 		int lvlLength = 1000;
-		int epochs = 50;
-		int geneSize = 50;
-		int[] netLayers = new int[]{5,7,6};
+		int epochs = 200;
+		int geneSize = 100;
+		int[] netLayers = new int[]{5,9,6};
 		
 		String trainedGANN = "BestAgentNN.data";
 		

@@ -125,6 +125,9 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
           inputs[3] = obstacleHeight(inputs[2]);
         //MARIO STATE OBSERVATION
           inputs[4] = canMarioShoot();
+          canMarioJump();
+          
+          PrintInputs();
     }
 	
 	private float enemyAboveDistance()
@@ -138,8 +141,6 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 	   		if(value == 80) //Goomba/Troopa
 	   		{
 	   			retWeightedDistance = distance * fraction;
-	   			if(verbose)
-	   				//System.out.println("Goomba/Troopa above detected: " + retWeightedDistance);
 	   			return retWeightedDistance;
 	   		}
 	   		else
@@ -161,8 +162,6 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 	   		if(value == 80)
 	   		{ //Goomba/Troopa //93 is spike koopa
 	   			retWeightedDistance = distance * fraction;
-	   			if(verbose)
-	   				//System.out.println("Goomba/Troopa front detected: " + retWeightedDistance);
 	   			return retWeightedDistance;
 	   		}
 	   		distance--;
@@ -178,11 +177,10 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		for(int i = 1; i < 4; i++ )
 	   	{
 	   		int value = getReceptiveFieldCellValue(marioEgoRow, marioEgoCol + i);
-	   		if(value == -60 || value == -85)
+	   		//System.out.println(value);
+	   		if(value == -60 || value == -85 || value == -24)
 	   		{
 	   			retWeightedDistance = distance * fraction;
-	   			if(verbose)
-	   				System.out.println("Front ObstacleDistance: " + retWeightedDistance);
 	   			return retWeightedDistance;
 	   		}  			
 	   			
@@ -219,8 +217,6 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		   			retWeightedHeigthDistance += fraction;		   			
 		   		}		   			
 		   	}
-		   	if(verbose)
-   				System.out.println("ObstacleDistance: " + distanceX + " ObstacleHeight: " + retWeightedHeigthDistance);
 		   	return retWeightedHeigthDistance; 	
 	   	}
 	   	else
@@ -238,4 +234,24 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		}
 	}
 	
+	private float canMarioJump()
+	{
+		float ret = 0;
+		if(this.isMarioAbleToJump && this.isMarioOnGround)
+			ret = 1;
+		return ret;
+	}
+	
+	private void PrintInputs()
+	{
+		if(verbose)
+		{
+			System.out.println("Enemy in front: " + inputs[0]);
+			System.out.println("Enemy abov: " + inputs[1]);
+			System.out.println("Obstacle front: " + inputs[2]);
+			System.out.println("Obstacle height: " + inputs[3]);
+			System.out.println("Mario state: " + inputs[4]);
+			System.out.println("Mario jump: " + inputs[5]);
+		}
+	}
 }

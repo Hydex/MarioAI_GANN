@@ -51,8 +51,8 @@ public class PlayGANN
 		{
 			MarioAIOptions marioAIOptions = new MarioAIOptions(new String[0]);
 			marioAIOptions.setVisualization(true);
-			marioAIOptions.setTimeLimit(20);
-			marioAIOptions.setFPS(99);
+			marioAIOptions.setTimeLimit(100);
+			marioAIOptions.setFPS(24);
 			marioAIOptions.setLevelLength(lvlLength);
 			marioAIOptions.setLevelRandSeed(levelseed);
 	    	marioAIOptions.setLevelDifficulty(0);
