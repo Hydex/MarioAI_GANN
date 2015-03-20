@@ -44,7 +44,7 @@ public class PlayGANN
 	}
     public static void main(String[] args) 
     {  	
-    	Agent controller = new MarioAgent_GA_NN("BestAgentNN.data",false);
+    	Agent controller = new MarioAgent_GA_NN("BestAgentNN.data",true);
     	int lvlLength = 1000;
     	double score = 0; 
 		for (int levelseed = 0; levelseed < 10; levelseed++)
@@ -57,6 +57,7 @@ public class PlayGANN
 			marioAIOptions.setLevelRandSeed(levelseed);
 	    	marioAIOptions.setLevelDifficulty(0);
 			marioAIOptions.setAgent(controller);
+	    	//marioAIOptions.setLevelType(levelseed);
 	    	BasicTask task = new BasicTask(marioAIOptions);
 	    	task.doEpisodes(1, false, 1);
 	    	EvaluationInfo info = task.getEnvironment().getEvaluationInfo();

@@ -111,8 +111,9 @@ public class GeneticAlgorithmTrainer {
     	marioAIOptions.setLevelRandSeed(seed);//(Math.random () * Integer.MAX_VALUE));
     	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
     	marioAIOptions.setTimeLimit(200);
-    	marioAIOptions.setFPS(99);
-    	
+    	marioAIOptions.setFPS(24);
+    	//marioAIOptions.setLevelType(1);
+    	    	
         if(lvlLength != -1)
         	marioAIOptions.setLevelLength(lvlLength);
         	
@@ -129,6 +130,7 @@ public class GeneticAlgorithmTrainer {
 		int kills = 0;
 		int timeLeft = 0;
 		int marioMode = 0;
+		int coins = 0;
 		double dp = 0;
        
 		task.doEpisodes(1, false, 1);
@@ -137,12 +139,13 @@ public class GeneticAlgorithmTrainer {
 		//evInfo = info;
 		distancePassed = info.distancePassedPhys;
 		kills = info.killsTotal;
+		coins = info.coinsGained;
 		timeLeft = info.timeLeft;
 		marioMode = info.marioMode;
 		
 		boolean falledInAGap = info.Memo.equals("Gap");
 		
-		double computedFit = ComputeFitness(distancePassed, timeLeft, kills, marioMode, falledInAGap);		
+		double computedFit = ComputeFitness(distancePassed, timeLeft, kills, coins, marioMode, falledInAGap);		
 		
 		//System.out.println("\nEvaluationInfo: \n" + task.getEnvironment().getEvaluationInfoAsString());
 				
@@ -150,7 +153,7 @@ public class GeneticAlgorithmTrainer {
        
 	}
 	
-	private double ComputeFitness(double dist, int timeLeft, int kills, int marioMode, boolean isInGap)
+	private double ComputeFitness(double dist, int timeLeft, int kills, int coins, int marioMode, boolean isInGap)
 	{
 		double fitness = (dist * 10);
 		if(isInGap)
@@ -164,7 +167,7 @@ public class GeneticAlgorithmTrainer {
 		if(dist > bonusDistance)
 		{
 			fitness *= (marioMode + 1);
-			fitness += kills * 10 + timeLeft * 2;
+			fitness += kills * 10 + timeLeft * 2 + coins * 5;
 			
 			if(marioMode==2)
 			{
@@ -196,9 +199,9 @@ public class GeneticAlgorithmTrainer {
 	{
 		int lvlDifficulty = 0;
 		int lvlLength = 1000;
-		int epochs = 200;
+		int epochs = 50;
 		int geneSize = 100;
-		int[] netLayers = new int[]{5,9,6};
+		int[] netLayers = new int[]{6,10,5};
 		
 		String trainedGANN = "BestAgentNN.data";
 		

@@ -11,7 +11,7 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 	private NeuralNetwork ann;
 	private int layers[];
 	private final int numberOfHiddenNeurons = 10;
-	private final int numberOfInputs = 5;
+	private final int numberOfInputs = 6;
 	private final int numberOfOutputs = 6;//Environment.numberOfKeys;
 	static private final String name = "GANN Agent";
 	private float inputs[];
@@ -98,7 +98,8 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
         ann.ComputeNet();
         float[] outputs = ann.GetOutputs();
         boolean[] action = new boolean[this.numberOfOutputs];
-        for (int i = 0; i < action.length; i++) 
+        //bad behavior here to setting last bit of action which is the up key to false)
+        for (int i = 0; i < outputs.length; i++) 
         { 
         	float f = outputs[i];
       	  	Math.round(f);
@@ -111,6 +112,8 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
       	  		action[i] = false;
       	  	}
         }
+        
+        action[5] = false;
       
         return action;
 	}
@@ -121,11 +124,16 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
         //ENEMY OBSERVATION
           inputs[0] = enemyInFrontDistance();
           inputs[1] = enemyAboveDistance();
+          inputs[6] = enemyBehindDistance();
+          inputs[7] = enemyUpRightDistance();
+          inputs[8] = enemyDownRightDistance();
+          inputs[9] = enemyBelowDistance();
+        //ENVIRONMENT OBSERVATION
           inputs[2] = obstacleDistance();
           inputs[3] = obstacleHeight(inputs[2]);
         //MARIO STATE OBSERVATION
           inputs[4] = canMarioShoot();
-          canMarioJump();
+          inputs[5] = canMarioJump();
           
           PrintInputs();
     }
@@ -137,7 +145,93 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		float retWeightedDistance;
 		for(int i = 1; i < 4; i++ )
 	   	{
+	   		int value = getEnemiesCellValue(marioEgoRow - i, marioEgoCol);
+	   		if(value == 80) //Goomba/Troopa
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}
+	   		else
+	   		{
+	   			distance--;
+	   		}
+	   	}
+	   	return 0;
+	}
+	
+	private float enemyBelowDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		for(int i = 1; i < 4; i++ )
+	   	{
 	   		int value = getEnemiesCellValue(marioEgoRow + i, marioEgoCol);
+	   		if(value == 80) //Goomba/Troopa
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}
+	   		else
+	   		{
+	   			distance--;
+	   		}
+	   	}
+	   	return 0;
+	}
+	
+	private float enemyBehindDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		for(int i = 1; i < 4; i++ )
+	   	{
+	   		int value = getEnemiesCellValue(marioEgoRow, marioEgoCol - i);
+	   		if(value == 80) //Goomba/Troopa
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}
+	   		else
+	   		{
+	   			distance--;
+	   		}
+	   	}
+	   	return 0;
+	}
+	
+	private float enemyUpRightDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		int x = marioEgoRow - 1;
+		for(int i = 1; i < 4; i++ )
+	   	{
+	   		int value = getEnemiesCellValue(x, marioEgoCol + i);
+	   		if(value == 80) //Goomba/Troopa
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}
+	   		else
+	   		{
+	   			distance--;
+	   		}
+	   		x--;
+	   	}
+	   	return 0;
+	}
+	
+	private float enemyDownRightDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		for(int i = 1; i < 4; i++ )
+	   	{
+	   		int value = getEnemiesCellValue(marioEgoRow + i, marioEgoCol + i);
 	   		if(value == 80) //Goomba/Troopa
 	   		{
 	   			retWeightedDistance = distance * fraction;
@@ -246,12 +340,12 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 	{
 		if(verbose)
 		{
-			System.out.println("Enemy in front: " + inputs[0]);
+			//System.out.println("Enemy in front: " + inputs[0]);
 			System.out.println("Enemy abov: " + inputs[1]);
-			System.out.println("Obstacle front: " + inputs[2]);
-			System.out.println("Obstacle height: " + inputs[3]);
-			System.out.println("Mario state: " + inputs[4]);
-			System.out.println("Mario jump: " + inputs[5]);
+			//System.out.println("Obstacle front: " + inputs[2]);
+			//System.out.println("Obstacle height: " + inputs[3]);
+			//System.out.println("Mario state: " + inputs[4]);
+			//System.out.println("Mario jump: " + inputs[5]);
 		}
 	}
 }

@@ -50,8 +50,8 @@ public static void main(String[] args)
 		  //marioAIOptions.setAgent(agent);
 //        final Agent agent = marioAIOptions.getAgent();
           //final Agent a = AgentsPool.getAgentByName("ch.idsia.controllers.agents.controllers.ForwardJumpingAgent");
-          marioAIOptions.setLevelLength(2000);
-          GamePlayTask basicTask = new GamePlayTask(marioAIOptions);
+          marioAIOptions.setLevelLength(1000);
+          BasicTask basicTask = new BasicTask(marioAIOptions);
           for (int i = 0; i < 10; ++i)
           {
               
@@ -60,6 +60,7 @@ public static void main(String[] args)
                 marioAIOptions.setLevelDifficulty(0);
                 marioAIOptions.setLevelRandSeed(i);
             	basicTask.setOptionsAndReset(marioAIOptions);
+            	marioAIOptions.setLevelType(i%3);
                 //basicTask.runSingleEpisode(1);
             	basicTask.doEpisodes(1,true,1);
     			//System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());

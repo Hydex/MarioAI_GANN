@@ -69,6 +69,7 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 		else return 0;
 	}
 
+	//This function has been copied: check behavior
 	public void MutateGaussian(float mean, float deviation)
 	{
 		Random r = new Random();

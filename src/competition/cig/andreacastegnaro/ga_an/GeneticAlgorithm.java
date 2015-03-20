@@ -117,22 +117,21 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 80));//Total 60
-		List<Chromosome> newPopPart3 = CloneChromosomeList(population.subList(0,60));//Total 90
-		
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 10));//Total 10
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 40));//Total 25
+		List<Chromosome> newPopPart21 = CloneChromosomeList(population.subList(0,30));//Total 40
+				
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
-		newPopulation.addAll(MultiMutateCrossOver(newPopPart3,true));
+		newPopulation.addAll(MultiMutateCrossOver(newPopPart21,true));
 		//Repopulating
-		int populationLeft = population.size() - newPopulation.size();
+		int populationLeft = population.size() - newPopulation.size();//10
 		System.out.println("New random population added: " + populationLeft);
 		
 		if(populationLeft>0)
 		{
-			List<Chromosome> newPopPart3 = new ArrayList<Chromosome>();
-			newPopPart3 = InitRandom(populationLeft);
-			newPopulation.addAll(newPopPart3);
+			List<Chromosome> newPopPart3 = CloneChromosomeList(population.subList(0, populationLeft));
+			newPopulation.addAll(MultiCrossOverWithNewRandom(newPopPart3, true));
 		}
 		this.population = newPopulation;
 		copyPopulationToNet();		
@@ -160,16 +159,51 @@ public class GeneticAlgorithm {
 		return retList;
 	}
 	
-	private List<Chromosome> MultiMutateCrossover(List<Chromosome> listToMutate, boolean shuffle)
+	private List<Chromosome> MultiMutateCrossOver(List<Chromosome> listToMutate, boolean shuffle)
 	{
 		if(listToMutate.size()%2 != 0)
 			throw new InvalidParameterException("MultiMutateCrossOver has to be even");
 		
+		listToMutate = MultiMutate(listToMutate);
+		
 		if(shuffle)
 			Collections.shuffle(listToMutate);
 		
+		List<Chromosome> retList = new ArrayList<Chromosome>();
+		for(int i = 0; i < listToMutate.size(); i += 2)
+			retList.add(CrossOver(listToMutate.get(i),listToMutate.get(i+1)));
 		
+		return retList;
 
+	}
+	
+	private List<Chromosome> MultiCrossOverWithNewRandom(List<Chromosome> listtocross, boolean shuffle)
+	{
+		listtocross = MultiMutate(listtocross);
+		
+		if(shuffle)
+			Collections.shuffle(listtocross);
+		
+		List<Chromosome> randomCrossList = InitRandom(listtocross.size());
+		listtocross.addAll(randomCrossList);
+		
+		List<Chromosome> retList = new ArrayList<Chromosome>();
+		for(int i = 0; i<listtocross.size(); i+=2)
+			retList.add(CrossOver(listtocross.get(i),listtocross.get(i+1))); 
+
+		if(retList.size() != listtocross.size()/2)
+			throw new InvalidParameterException("ERROR in MultiMutateCrossOverWithRandomWeights: The number of chromosome should be equal in both input and output");
+		
+		return retList;
+	}
+	
+	private List<Chromosome> MultiMutate(List<Chromosome> listtomutate)
+	{
+		for(int i = 0; i < listtomutate.size();i++)
+		{
+			listtomutate.get(i).MutateGaussian(0.0f, 0.1f);
+		}
+		return listtomutate;
 	}
 	
 	private Chromosome CrossOver(Chromosome c1, Chromosome c2)
