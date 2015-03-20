@@ -117,9 +117,9 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 10));//Total 10
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 40));//Total 25
-		List<Chromosome> newPopPart21 = CloneChromosomeList(population.subList(0,30));//Total 40
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 80));//Total 60
+		List<Chromosome> newPopPart21 = CloneChromosomeList(population.subList(0,60));//Total 90
 				
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));

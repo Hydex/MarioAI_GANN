@@ -110,7 +110,7 @@ public class GeneticAlgorithmTrainer {
     	marioAIOptions.setVisualization(false);
     	marioAIOptions.setLevelRandSeed(seed);//(Math.random () * Integer.MAX_VALUE));
     	marioAIOptions.setLevelDifficulty(this.lvlDifficulty);
-    	marioAIOptions.setTimeLimit(20);
+    	marioAIOptions.setTimeLimit(100);
     	marioAIOptions.setFPS(99);
     	marioAIOptions.setLevelType(seed%3);
     	    	
@@ -199,7 +199,7 @@ public class GeneticAlgorithmTrainer {
 	{
 		int lvlDifficulty = 0;
 		int lvlLength = 1000;
-		int epochs = 100;
+		int epochs = 600;
 		int geneSize = 100;
 		int[] netLayers = new int[]{13,25,5};
 		

@@ -413,14 +413,14 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 			//System.out.println("Enemy in front: " + inputs[0]);
 			//System.out.println("Enemy above: " + inputs[1]);
 			//System.out.println("Mario jump: " + inputs[5]);
-			//System.out.println(("Enemy in behind: " + inputs[6]);
+			System.out.println("Enemy in behind: " + inputs[6]);
 			//System.out.println(("Enemy up right: " + inputs[7]);
 			//System.out.println(("Enemy down right: " + inputs[8]);
 			//System.out.println(("Enemy below: " + inputs[9]);
 			//System.out.println("Obstacle front: " + inputs[2]);
 			//System.out.println("Obstacle height: " + inputs[3]);
-			System.out.println(("Obstacle below: " + inputs[10]));
-			System.out.println(("Obstacle above: " + inputs[11]));
+			//System.out.println(("Obstacle below: " + inputs[10]));
+			//System.out.println(("Obstacle above: " + inputs[11]));
 			//System.out.println(("Gap In Front: " + inputs[12]);
 			//System.out.println("Mario state: " + inputs[4]);
 
