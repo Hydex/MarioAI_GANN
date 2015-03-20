@@ -10,8 +10,8 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 
 	private NeuralNetwork ann;
 	private int layers[];
-	private final int numberOfHiddenNeurons = 10;
-	private final int numberOfInputs = 6;
+	private final int numberOfHiddenNeurons = 20;
+	private final int numberOfInputs = 13;
 	private final int numberOfOutputs = 6;//Environment.numberOfKeys;
 	static private final String name = "GANN Agent";
 	private float inputs[];
@@ -131,6 +131,9 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
         //ENVIRONMENT OBSERVATION
           inputs[2] = obstacleDistance();
           inputs[3] = obstacleHeight(inputs[2]);
+          inputs[10] = obstacleBelowDistance();
+          inputs[11] = obstacleAboveDistance();
+          inputs[12] = gapInFront();
         //MARIO STATE OBSERVATION
           inputs[4] = canMarioShoot();
           inputs[5] = canMarioJump();
@@ -284,6 +287,47 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 	   	return 0; 	
 	}
 	
+	//to help mario get the coins
+	private float obstacleAboveDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		for(int i = 1; i < 4; i++ )
+	   	{
+	   		int value = getReceptiveFieldCellValue(marioEgoRow - i, marioEgoCol);
+	   		if(value < 0)
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}  			
+	   			
+	   		distance--;
+	   	}
+	   	
+	   	return 0;
+	}
+	
+	private float obstacleBelowDistance()
+	{
+		int distance = 3;
+		float fraction = 1.0f/distance;
+		float retWeightedDistance;
+		for(int i = 1; i < 4; i++ )
+	   	{
+	   		int value = getReceptiveFieldCellValue(marioEgoRow + i, marioEgoCol);
+	   		if(value < 0)
+	   		{
+	   			retWeightedDistance = distance * fraction;
+	   			return retWeightedDistance;
+	   		}  			
+	   			
+	   		distance--;
+	   	}
+	   	
+	   	return 0;
+	}
+	
 	private float obstacleHeight(float obdistance)
 	{
 		//return retWeightedDistance;
@@ -317,13 +361,39 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
    			return 0;
 	}
 	
+	private float gapInFront()
+	{
+		float distance = 3;
+		int x = marioEgoRow;
+	   	for(int i = 1; i<4;i++)
+	   	{
+	   		boolean isGap = true;
+	   		for(int y = 1; y < 10; ++y)
+	   		{
+	   			if(levelScene[x + y][marioEgoCol + i] != 0)
+	   			{
+	   				isGap = false;
+	   			}
+	   		}
+	   		if(isGap)
+	   		{
+	   			return distance*0.33f;
+	   		}
+	   		else
+	   		{
+	   			distance--;
+	   		}
+	   	}
+       return 0;
+	}
+	
 	private float canMarioShoot()
 	{
 		switch((marioMode))
 		{
-			case 0: return 0.33f;
-			case 1: return 0.66f;
-			case 2: return 0.99f;
+			case 0: return 0.0f;
+			case 1: return 0.0f;
+			case 2: return 1.0f;
 			default: return -1.0f;
 		}
 	}
@@ -341,11 +411,20 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		if(verbose)
 		{
 			//System.out.println("Enemy in front: " + inputs[0]);
-			System.out.println("Enemy abov: " + inputs[1]);
+			//System.out.println("Enemy above: " + inputs[1]);
+			//System.out.println("Mario jump: " + inputs[5]);
+			//System.out.println(("Enemy in behind: " + inputs[6]);
+			//System.out.println(("Enemy up right: " + inputs[7]);
+			//System.out.println(("Enemy down right: " + inputs[8]);
+			//System.out.println(("Enemy below: " + inputs[9]);
 			//System.out.println("Obstacle front: " + inputs[2]);
 			//System.out.println("Obstacle height: " + inputs[3]);
+			System.out.println(("Obstacle below: " + inputs[10]));
+			System.out.println(("Obstacle above: " + inputs[11]));
+			//System.out.println(("Gap In Front: " + inputs[12]);
 			//System.out.println("Mario state: " + inputs[4]);
-			//System.out.println("Mario jump: " + inputs[5]);
+
+
 		}
 	}
 }
