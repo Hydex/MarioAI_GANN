@@ -72,7 +72,7 @@ public class Chromosome implements Cloneable, Comparable<Object>{
 	//This function has been copied: check behavior
 	public void MutateGaussian(float mean, float deviation)
 	{
-		Random r = new Random();
+		Random r = new Random(new Random().nextLong());
 		Random increment = new Random((new Random()).nextLong());
 		int randomGene = increment.nextInt(11); //cambio geni a caso fino a raggiungere la dimensione dei geni, a passi di 10 max
 		while(randomGene < genes.size())

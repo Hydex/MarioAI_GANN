@@ -59,8 +59,11 @@ public static void main(String[] args)
               //{
                 marioAIOptions.setLevelDifficulty(0);
                 marioAIOptions.setLevelRandSeed(i);
+                //marioAIOptions.setFlatLevel(true);
+                
             	basicTask.setOptionsAndReset(marioAIOptions);
             	marioAIOptions.setLevelType(i%3);
+            	marioAIOptions.setFrozenCreatures(false);
                 //basicTask.runSingleEpisode(1);
             	basicTask.doEpisodes(1,true,1);
     			//System.out.println(basicTask.getEnvironment().getEvaluationInfoAsString());

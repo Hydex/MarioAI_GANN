@@ -64,6 +64,8 @@ protected int getKillsByFire;
 protected int getKillsByStomp;
 protected int getKillsByShell;
 
+protected int getTimeLeft;
+
 protected int receptiveFieldWidth;
 protected int receptiveFieldHeight;
 protected int marioEgoRow;
@@ -96,6 +98,8 @@ public void integrateObservation(Environment environment)
     this.enemiesFloatPos = environment.getEnemiesFloatPos();
     this.marioState = environment.getMarioState();
 
+    this.getTimeLeft = environment.getTimeSpent();
+    
     receptiveFieldWidth = environment.getReceptiveFieldWidth();
     receptiveFieldHeight = environment.getReceptiveFieldHeight();
 

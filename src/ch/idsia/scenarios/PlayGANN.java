@@ -47,24 +47,26 @@ public class PlayGANN
     	Agent controller = new MarioAgent_GA_NN("BestAgentNN.data",true);
     	int lvlLength = 1000;
     	double score = 0; 
-		for (int levelseed = 0; levelseed < 10; levelseed++)
+		for (int seed = 0; seed < 15; seed++)
 		{
 			MarioAIOptions marioAIOptions = new MarioAIOptions(new String[0]);
-			marioAIOptions.setVisualization(true);
-			marioAIOptions.setTimeLimit(100);
-			marioAIOptions.setFPS(10);
-			marioAIOptions.setLevelLength(lvlLength);
-			marioAIOptions.setLevelRandSeed(levelseed);
-	    	marioAIOptions.setLevelDifficulty(0);
-			marioAIOptions.setAgent(controller);
-	    	//marioAIOptions.setLevelType(levelseed);
+			marioAIOptions.setAgent(controller);        
 	    	BasicTask task = new BasicTask(marioAIOptions);
-	    	task.doEpisodes(1, false, 1);
+	    	
+	    	marioAIOptions.setVisualization(true);
+	    	marioAIOptions.setLevelRandSeed(seed);
+	    	marioAIOptions.setLevelDifficulty(0);
+	    	
+	    	marioAIOptions.setFPS(50);
+	    	marioAIOptions.setFrozenCreatures(false);
+	    	marioAIOptions.setLevelType(seed%3);
+	    	task.doEpisodes(1, true, 1);
 	    	EvaluationInfo info = task.getEnvironment().getEvaluationInfo();
 	    	double distancePassed = info.distancePassedPhys;
 			int kills = info.killsTotal;
 			int timeLeft = info.timeLeft;
 			int marioMode = info.marioMode;
+			
 			boolean falledInAGap = info.Memo.equals("Gap");
 			score += PlayGANN.ComputeFitness(lvlLength, distancePassed, timeLeft, kills, marioMode, falledInAGap);
 			//double currentscore = 

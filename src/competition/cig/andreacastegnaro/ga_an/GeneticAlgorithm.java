@@ -13,6 +13,10 @@ import java.security.InvalidParameterException;
 public class GeneticAlgorithm {
 	
 	protected int population_size;
+	
+	protected int pop_to_cross;
+	protected int pop_to_multicross;
+	protected int pop_to_save;
 
 	protected List<Chromosome> population;
 	protected List<NeuralNetwork> genes;
@@ -40,11 +44,28 @@ public class GeneticAlgorithm {
 		
 		weightsCount = genes.get(0).GetNumberTotalWeights();
 	}
+	
+	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[], int crossover, int multicrossover, int bestsave)
+	{
+		this(pop_size,nnetNeuronsPerLayer);
+		this.pop_to_cross = crossover;
+		this.pop_to_multicross = multicrossover;
+		this.pop_to_save = bestsave;
+	}
 
 	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[], String trainedFile )
 	{
 		this(pop_size,nnetNeuronsPerLayer);
 		annSavedFile = new FileSaver(trainedFile);
+	}
+	
+	public GeneticAlgorithm(int pop_size, int nnetNeuronsPerLayer[], String trainedFile, int crossover, int multicrossover, int bestsave)
+	{
+		this(pop_size,nnetNeuronsPerLayer);
+		annSavedFile = new FileSaver(trainedFile);
+		this.pop_to_cross = crossover;
+		this.pop_to_multicross = multicrossover;
+		this.pop_to_save = bestsave;
 	}
 	
 	private void Init() 
@@ -117,9 +138,9 @@ public class GeneticAlgorithm {
 		
 		List<Chromosome> newPopulation = new ArrayList<Chromosome>();
 		
-		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, 20));//Total 20
-		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, 80));//Total 60
-		List<Chromosome> newPopPart21 = CloneChromosomeList(population.subList(0,60));//Total 90
+		List<Chromosome> newPopPart1 = CloneChromosomeList(population.subList(0, this.pop_to_save));//Total 20
+		List<Chromosome> newPopPart2 = CloneChromosomeList(population.subList(0, this.pop_to_cross));//Total 60
+		List<Chromosome> newPopPart21 = CloneChromosomeList(population.subList(0,this.pop_to_multicross));//Total 90
 				
 		newPopulation.addAll(newPopPart1);
 		newPopulation.addAll(MultiCrossOver(newPopPart2,true));
@@ -201,7 +222,7 @@ public class GeneticAlgorithm {
 	{
 		for(int i = 0; i < listtomutate.size();i++)
 		{
-			listtomutate.get(i).MutateGaussian(0.0f, 0.1f);
+			listtomutate.get(i).MutateGaussian(0.0f, 0.2f);
 		}
 		return listtomutate;
 	}
