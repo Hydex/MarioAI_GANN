@@ -263,11 +263,11 @@ public class GeneticAlgorithmTrainer {
 		int lvlLength = -1;
 		int epochs = 1000;
 		int geneSize = 100;
-		int[] netLayers = new int[]{13,30,5};
+		int[] netLayers = new int[]{13,15,10,5};
 		int bestsave = 20;
 		int crossover = 80;
 		int multicrossover = 60;
-		String trainedGANN = "BestAgentNN.data";
+		String trainedGANN = "BestAgentNNlvl3.data";
 		
 		//deprecated
 		//new GeneticAlgorithmTrainer(lvlDifficulty, lvlLength, epochs, geneSize, netLayers, trainedGANN);

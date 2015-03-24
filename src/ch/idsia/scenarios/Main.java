@@ -51,13 +51,13 @@ public static void main(String[] args)
 //        final Agent agent = marioAIOptions.getAgent();
           //final Agent a = AgentsPool.getAgentByName("ch.idsia.controllers.agents.controllers.ForwardJumpingAgent");
           marioAIOptions.setLevelLength(1000);
-          BasicTask basicTask = new BasicTask(marioAIOptions);
+          LearningTask basicTask = new LearningTask(marioAIOptions);
           for (int i = 0; i < 10; ++i)
           {
               
               //do
               //{
-                marioAIOptions.setLevelDifficulty(0);
+                marioAIOptions.setLevelDifficulty(1);
                 marioAIOptions.setLevelRandSeed(i);
                 //marioAIOptions.setFlatLevel(true);
                 

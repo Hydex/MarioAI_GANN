@@ -158,7 +158,7 @@ public class MarioAgent_GA_NN extends BasicMarioAIAgent implements Agent
 		else
 		{
 			int currTime = this.getTimeLeft;
-			if(currTime - lastRecordedTime > 1)
+			if(currTime - lastRecordedTime > 0)
 			{
 				return 1;
 			}
