@@ -5,5 +5,6 @@ You can find my implementation of Neural Network and Genetic Algorithm.
 With regards to the latter one crossover, mutation with random Gaussian distribution and crossover with random weights have been implemented
 
 Can see the result here:
-
 https://www.youtube.com/watch?v=7BlDY9G9aQ8
+
+If more interested and want to have a description of the strategy and implementation see the report inside documentation.
