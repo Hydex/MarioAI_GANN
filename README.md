@@ -2,7 +2,10 @@
 A simple project for my AI course, written in Java and using the MarioAI benchmark.
 
 You can find my implementation of Neural Network and Genetic Algorithm.
-With regards to the latter one crossover, mutation with random Gaussian distribution and crossover with random weights have been implemented
+With regards to the latter one crossover, mutation with random Gaussian distribution and crossover with random weights have been implemented.
+
+To train a new population run GeneticAlgorithmTrainer.java . Every 10 epochs the best agent is saved to the file specified in the main.
+To see your generation run PlayGANN.java, remebere to put the same name file used during generation.
 
 Can see the result here:
 https://www.youtube.com/watch?v=7BlDY9G9aQ8
